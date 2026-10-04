@@ -1,0 +1,17 @@
+{
+  "name": "@maze/simulation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "jest --coverage",
+    "typecheck": "tsc -p tsconfig.json",
+    "balance": "tsx tools/balance-bot.ts"
+  },
+  "dependencies": {
+    "@maze/shared": "*"
+  }
+}

@@ -1,0 +1,59 @@
+# Full stack: docker compose -f docker-compose.prod.yml up --build
+# Open http://localhost (Caddy routes /api/* and /socket.io/* to the game server, everything else to Next.js).
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-maze}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-maze}
+      POSTGRES_DB: maze_defense
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-maze}']
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://${POSTGRES_USER:-maze}:${POSTGRES_PASSWORD:-maze}@postgres:5432/maze_defense
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+      CLIENT_ORIGIN: ${PUBLIC_URL:-http://localhost}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: packages/client/Dockerfile
+      args:
+        NEXT_PUBLIC_SERVER_URL: ${PUBLIC_URL:-http://localhost}/api
+    depends_on:
+      - server
+    restart: unless-stopped
+
+  proxy:
+    image: caddy:2-alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on:
+      - client
+      - server
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:

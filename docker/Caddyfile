@@ -1,0 +1,17 @@
+# SITE_ADDRESS=":80" for local use, or your domain (e.g. "play.example.com") for automatic HTTPS.
+{$SITE_ADDRESS}
+
+encode gzip
+
+# WebSocket upgrades are proxied transparently.
+handle /socket.io/* {
+	reverse_proxy server:4000
+}
+
+handle_path /api/* {
+	reverse_proxy server:4000
+}
+
+handle {
+	reverse_proxy client:3000
+}

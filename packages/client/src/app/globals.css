@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: var(--font-cinzel), serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --color-gold: #f5c542;
+  --color-ink: #0c1117;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(94, 160, 70, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(140, 90, 220, 0.14), transparent 60%),
+    #0c1117;
+  color: #e8ecef;
+}
+
+@utility panel {
+    @apply rounded-2xl border border-white/10 bg-slate-900/70 shadow-xl shadow-black/30 backdrop-blur;
+}
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold transition active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+@utility btn-primary {
+    @apply btn bg-gradient-to-b from-amber-300 to-amber-500 text-slate-900 shadow-lg shadow-amber-500/20 hover:from-amber-200 hover:to-amber-400;
+}
+
+@utility btn-secondary {
+    @apply btn border border-white/15 bg-white/5 text-slate-100 hover:bg-white/10;
+}
+
+@utility btn-danger {
+    @apply btn border border-red-400/30 bg-red-500/15 text-red-200 hover:bg-red-500/25;
+}
+
+@utility input {
+    @apply w-full rounded-xl border border-white/10 bg-slate-950/60 px-3 py-2 text-slate-100 outline-none placeholder:text-slate-500 focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/20;
+}
+
+@utility label {
+    @apply mb-1 block text-xs font-semibold tracking-wide text-slate-400 uppercase;
+}
+
+@keyframes banner-in {
+  0% { opacity: 0; transform: translateY(-20px) scale(0.9); letter-spacing: 0.4em; }
+  15% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.08em; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+.animate-banner {
+  animation: banner-in 2.6s ease-out forwards;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-toast {
+  animation: toast-in 0.18s ease-out;
+}
